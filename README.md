@@ -8,12 +8,23 @@
 [![Author](https://img.shields.io/badge/Author-Scafo745-0055ff?style=for-the-badge&logo=github)](https://github.com/Scafo745)
 [![Author & Contributor](https://img.shields.io/badge/Author%20%26%20Contributor-neet2516-10b981?style=for-the-badge&logo=github)](https://github.com/neet2516)
 [![Repository](https://img.shields.io/badge/Repo-Scafo745%2FZero--Day-ff3333?style=for-the-badge&logo=git)](https://github.com/Scafo745/Zero-Day)
+[![Live Dashboard](https://img.shields.io/badge/Live%20Dashboard-Vercel-black?style=for-the-badge&logo=vercel)](https://zero-day-olive.vercel.app/)
+[![Live API](https://img.shields.io/badge/Live%20Backend-Render-46E3B7?style=for-the-badge&logo=render)](https://zero-day-cj0b.onrender.com)
 [![Next.js](https://img.shields.io/badge/Frontend-Next.js%2015-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Ollama](https://img.shields.io/badge/AI%20Engine-Ollama%20%7C%20Gemma%204-black?style=for-the-badge&logo=ollama)](https://ollama.com/)
 [![Express](https://img.shields.io/badge/Backend-Express%20%2B%20TypeScript-000000?style=for-the-badge&logo=express)](https://expressjs.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 </div>
+
+---
+
+## 🌐 Live Deployments
+
+| Component | Platform | URL | Health / Status |
+|:---|:---|:---|:---|
+| **Frontend SOC Dashboard** | **Vercel** | [https://zero-day-olive.vercel.app](https://zero-day-olive.vercel.app) | Production App Router (Next.js 15) |
+| **Backend Telemetry API** | **Render** | [https://zero-day-cj0b.onrender.com](https://zero-day-cj0b.onrender.com) | [`/api/health`](https://zero-day-cj0b.onrender.com/api/health) |
 
 ---
 

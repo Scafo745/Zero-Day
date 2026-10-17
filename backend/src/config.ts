@@ -5,5 +5,5 @@ export const config = {
   ollamaTimeoutMs: Number(process.env.OLLAMA_TIMEOUT_MS ?? '120000'),
   ollamaKeepAlive: process.env.OLLAMA_KEEP_ALIVE ?? '10m',
   port: Number(process.env.PORT ?? '5001'),
-  frontendOrigin: process.env.FRONTEND_ORIGIN ?? 'http://localhost:3000',
+  frontendOrigin: process.env.FRONTEND_ORIGIN ?? 'https://zero-day-olive.vercel.app',
 } as const;

@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "http://localhost:5001/api/:path*"
+      "destination": "https://zero-day-cj0b.onrender.com/api/:path*"
     }
   ]
 }

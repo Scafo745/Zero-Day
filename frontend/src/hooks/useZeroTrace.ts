@@ -31,7 +31,14 @@ export function useZeroTrace() {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const simulationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5001';
+  const rawApiUrl =
+    process.env.NEXT_PUBLIC_API_URL ||
+    (typeof window !== 'undefined' &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1'
+      ? 'https://zero-day-cj0b.onrender.com'
+      : 'http://localhost:5001');
+  const apiUrl = rawApiUrl.replace(/\/$/, '');
 
   const connectSSE = useCallback(() => {
     if (reconnectTimeoutRef.current) {

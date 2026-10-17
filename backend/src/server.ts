@@ -9,8 +9,37 @@ import healthRoute from './routes/health';
 
 const app = express();
 
-// Middleware
-app.use(cors({ origin: config.frontendOrigin, credentials: true }));
+// CORS configuration supporting production Vercel deployment, localhost, and cloud origins
+const allowedOrigins = [
+  'https://zero-day-olive.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5001',
+  'http://127.0.0.1:3000',
+  config.frontendOrigin,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+      if (!origin) return callback(null, true);
+
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app') ||
+        config.frontendOrigin === '*'
+      ) {
+        return callback(null, true);
+      }
+
+      // Allow any incoming origin dynamically for seamless multi-environment hosting
+      return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'X-Requested-With'],
+  })
+);
 app.use(express.json());
 
 // Routes
