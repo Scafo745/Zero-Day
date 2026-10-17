@@ -109,6 +109,8 @@
 
 ```
 packages/shared/types.ts              ← canonical data contract (source of truth)
+agent/PRD-BACKEND.md                  ← backend build spec (all modules, routes, acceptance criteria)
+agent/PRD-FRONTEND.md                 ← frontend build spec (all components, hooks, design system)
 agent/prompts/system.md               ← system prompt (scoring rubric + few-shots)
 agent/schemas/zerotrace-incident.schema.json  ← Ollama format field schema
 agent/ollama/Modelfile                ← FROM gemma4:e4b + PARAMETER temperature 0.1
