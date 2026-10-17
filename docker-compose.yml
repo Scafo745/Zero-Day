@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: zerotrace-backend
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - LLM_MODE=auto
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - OLLAMA_MODEL=zerotrace-analyst
+      - FRONTEND_ORIGIN=http://localhost:3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:5001
+    container_name: zerotrace-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    restart: unless-stopped
