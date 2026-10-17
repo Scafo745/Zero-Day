@@ -1,0 +1,26 @@
+{
+  "analysis": {
+    "threatScore": 35,
+    "verdict": "SAFE",
+    "isAnomaly": false,
+    "reasoningTrail": [
+      "Parent process is sshd — this is a standard pattern for an SSH login session spawning an interactive shell. SSH_TTY and SSH_CLIENT env vars confirm this is a legitimate interactive session. Signal: -15 (SSH/terminal indicators).",
+      "Command is /bin/bash with no arguments — interactive shell, not a scripted attack. Files touched are .bashrc and .bash_history, both expected during shell initialization. Signal: -10 (no sensitive file access).",
+      "No network destinations observed — the process has not initiated any outbound connections beyond the SSH session itself. Signal: -10 (no network)."
+    ],
+    "mitreTechniques": [],
+    "blockIp": "",
+    "remediation": "No action required. This appears to be a legitimate SSH session for user alice. If alice's SSH access is unexpected, verify her account status and SSH key authorization."
+  },
+  "socContainment": {
+    "recommendedKillPid": 5512,
+    "containmentAction": "No containment required — interactive shell is within expected parameters",
+    "escalationPriority": "P3"
+  },
+  "developerPostmortem": {
+    "title": "INFO: Interactive bash session via SSH detected for alice (PID 5512)",
+    "description": "## Summary\n\nUser alice initiated an interactive SSH session resulting in a bash shell (PID 5512). No anomalous file access or network activity was detected. Score: 35/100 (SAFE).\n\nThis is expected behavior for a developer with SSH access.",
+    "actionItems": [],
+    "severity": "low"
+  }
+}

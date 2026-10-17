@@ -1,0 +1,88 @@
+{
+  "type": "object",
+  "properties": {
+    "analysis": {
+      "type": "object",
+      "properties": {
+        "threatScore": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Threat score 0-100. 0-39=SAFE, 40-74=SUSPICIOUS, 75-100=CRITICAL."
+        },
+        "verdict": {
+          "type": "string",
+          "enum": ["SAFE", "SUSPICIOUS", "CRITICAL"],
+          "description": "Human-readable verdict matching the score band."
+        },
+        "isAnomaly": {
+          "type": "boolean",
+          "description": "True if this process is considered anomalous."
+        },
+        "reasoningTrail": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered reasoning steps (minimum 3). Each step names one signal."
+        },
+        "mitreTechniques": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "MITRE ATT&CK technique IDs, e.g. T1059.004. Empty array if none."
+        },
+        "blockIp": {
+          "type": "string",
+          "description": "IPv4 address to block, or empty string if no exfiltration detected."
+        },
+        "remediation": {
+          "type": "string",
+          "description": "Remediation advice for the analyst. May include a fenced bash code block."
+        }
+      },
+      "required": ["threatScore", "verdict", "isAnomaly", "reasoningTrail", "mitreTechniques", "blockIp", "remediation"]
+    },
+    "socContainment": {
+      "type": "object",
+      "properties": {
+        "recommendedKillPid": {
+          "type": "integer",
+          "description": "PID to kill. Must equal the observed process PID."
+        },
+        "containmentAction": {
+          "type": "string",
+          "description": "Human-readable containment action label."
+        },
+        "escalationPriority": {
+          "type": "string",
+          "enum": ["P1", "P2", "P3"],
+          "description": "P1=immediate (critical), P2=urgent (suspicious), P3=low (safe)."
+        }
+      },
+      "required": ["recommendedKillPid", "containmentAction", "escalationPriority"]
+    },
+    "developerPostmortem": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Short ticket title, 80 characters or fewer."
+        },
+        "description": {
+          "type": "string",
+          "description": "Markdown-formatted description of the detection and its impact."
+        },
+        "actionItems": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Concrete action items for the development team."
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "low"],
+          "description": "Ticket severity: critical=75-100, high=40-74, low=0-39."
+        }
+      },
+      "required": ["title", "description", "actionItems", "severity"]
+    }
+  },
+  "required": ["analysis", "socContainment", "developerPostmortem"]
+}

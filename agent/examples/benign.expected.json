@@ -1,0 +1,26 @@
+{
+  "analysis": {
+    "threatScore": 4,
+    "verdict": "SAFE",
+    "isAnomaly": false,
+    "reasoningTrail": [
+      "Parent process is systemd (PID 1) — this is a standard service-unit launch pattern. There is no lateral movement indicator. Signal: -20.",
+      "Command line 'node /srv/app/dist/server.js --port 3000' matches a known-good Node.js server startup pattern: canonical binary path, structured argument, standard HTTP port. Signal: -15.",
+      "Working directory /srv/app is a conventional service root; no sensitive files were touched and there are no outbound network destinations. Signals: -10 (workdir) -10 (no network) = -20."
+    ],
+    "mitreTechniques": [],
+    "blockIp": "",
+    "remediation": "No action required. Process is operating within expected parameters for a Node.js web service managed by systemd."
+  },
+  "socContainment": {
+    "recommendedKillPid": 1234,
+    "containmentAction": "No containment required — process is safe",
+    "escalationPriority": "P3"
+  },
+  "developerPostmortem": {
+    "title": "INFO: Benign Node.js service launch detected (PID 1234)",
+    "description": "## Summary\n\nProcess PID 1234 is a standard Node.js application server launched by systemd. No anomalous behavior was detected. Score: 4/100 (SAFE).\n\nThis is an expected pattern for a production web service.",
+    "actionItems": [],
+    "severity": "low"
+  }
+}

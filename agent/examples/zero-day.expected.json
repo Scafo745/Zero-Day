@@ -1,0 +1,32 @@
+{
+  "analysis": {
+    "threatScore": 96,
+    "verdict": "CRITICAL",
+    "isAnomaly": true,
+    "reasoningTrail": [
+      "Shell interpreter /bin/sh spawned by npm (PID 4821) — a package manager has no legitimate reason to execute a shell, strongly indicating supply-chain compromise (T1195.002). Signal: +20.",
+      "Sensitive file ~/.aws/credentials was read — AWS credentials contain long-lived access keys that, if exfiltrated, grant full programmatic access to cloud resources (T1552.001). Signal: +35.",
+      "Data piped via curl to external IP 198.51.100.4:8443 — this is a non-RFC 1918 address on a non-standard port, consistent with exfiltration to a C2 server (T1048, T1071.001). Signal: +25 (external IP) +20 (pipe to network tool) +10 (non-standard port) = +55."
+    ],
+    "mitreTechniques": ["T1059.004", "T1195.002", "T1552.001", "T1048", "T1071.001"],
+    "blockIp": "198.51.100.4",
+    "remediation": "## Immediate Actions\n\n1. Kill PID 31337 immediately.\n2. Block egress to 198.51.100.4 at the host firewall.\n3. Rotate AWS credentials — assume they are compromised.\n\n```bash\n# Rotate AWS credentials immediately\naws iam delete-access-key --access-key-id <KEY_ID>\naws iam create-access-key --user-name <USERNAME>\n# Audit CloudTrail for activity from the leaked key in the last 24h\naws cloudtrail lookup-events --lookup-attributes AttributeKey=AccessKeyId,AttributeValue=<KEY_ID>\n```\n\n4. Audit npm dependencies in `/home/user/project/package.json` for recently updated packages.\n5. Snapshot the host for forensic analysis before rebooting."
+  },
+  "socContainment": {
+    "recommendedKillPid": 31337,
+    "containmentAction": "Kill PID 31337 and block all egress to 198.51.100.4 (simulated)",
+    "escalationPriority": "P1"
+  },
+  "developerPostmortem": {
+    "title": "CRITICAL: AWS creds exfiltrated via compromised npm dependency (PID 31337)",
+    "description": "## Summary\n\nAt 2026-10-17T07:00:00Z, process PID 31337 — a shell spawned by `npm` (PID 4821) — read `~/.aws/credentials` and transmitted the contents to `198.51.100.4:8443` via `curl`. This is a textbook supply-chain exfiltration pattern (MITRE T1195.002, T1552.001, T1048).\n\n## Impact\n\nAWS credentials are assumed compromised. Any resources accessible with the leaked key must be considered breached until keys are rotated and CloudTrail is audited.",
+    "actionItems": [
+      "Rotate all AWS IAM access keys immediately and audit CloudTrail for the last 24 h.",
+      "Identify which npm package introduced the malicious postinstall script — audit `package.json` and lockfile.",
+      "Remove or pin the compromised dependency and re-run `npm audit`.",
+      "Add `--ignore-scripts` to npm installs in CI pipelines to prevent postinstall execution.",
+      "Enable AWS GuardDuty and SCPs to restrict credential use from developer workstations."
+    ],
+    "severity": "critical"
+  }
+}

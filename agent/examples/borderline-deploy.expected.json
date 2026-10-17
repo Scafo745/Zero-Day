@@ -1,0 +1,30 @@
+{
+  "analysis": {
+    "threatScore": 45,
+    "verdict": "SUSPICIOUS",
+    "isAnomaly": true,
+    "reasoningTrail": [
+      "Deploy script reads /opt/deploy/.env.production — environment files may contain secrets (API keys, database passwords). Not classified as a sensitive file at the same level as ~/.aws/credentials, but warrants attention. Signal: +10 (partial credit).",
+      "Network destination 10.0.1.50:8080 is an RFC 1918 (internal) IP address — not an external exfiltration target. Internal traffic is expected in deploy pipelines. Signal: 0 (internal IPs do not trigger external-destination penalty).",
+      "Command matches a structured deploy script pattern (/opt/deploy/scripts/release.sh --env production) run by a dedicated deploy-bot user — this is consistent with CI/CD automation. Signal: -10 (service-like working directory) -5 (partial known-good pattern credit)."
+    ],
+    "mitreTechniques": ["T1552.001"],
+    "blockIp": "",
+    "remediation": "## Recommendation\n\nEscalate to a senior analyst for review. Verify that:\n1. `deploy-bot` is an authorized CI/CD service account.\n2. `/opt/deploy/.env.production` does not contain secrets that should be in a secrets manager.\n3. 10.0.1.50:8080 is the expected internal deployment target.\n\n```bash\n# Check deploy-bot's recent activity\nlast deploy-bot\nauditctl -l | grep deploy-bot\n```"
+  },
+  "socContainment": {
+    "recommendedKillPid": 7823,
+    "containmentAction": "Monitor and escalate — do not kill without analyst confirmation",
+    "escalationPriority": "P2"
+  },
+  "developerPostmortem": {
+    "title": "SUSPICIOUS: Deploy script reading .env.production (PID 7823) — review required",
+    "description": "## Summary\n\nA deploy script run by `deploy-bot` accessed `.env.production` during a production release. The network traffic was internal only. Score: 45/100 (SUSPICIOUS).\n\n## Why This Was Flagged\n\nProduction environment files may contain secrets. If this access is expected, add it to the allowlist.",
+    "actionItems": [
+      "Verify deploy-bot account credentials are rotated and scoped to minimum required permissions.",
+      "Move secrets from .env.production to a secrets manager (AWS Secrets Manager, HashiCorp Vault).",
+      "Add this deploy pattern to the ZeroTrace allowlist once verified."
+    ],
+    "severity": "high"
+  }
+}

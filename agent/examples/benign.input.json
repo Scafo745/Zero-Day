@@ -1,0 +1,15 @@
+{
+  "capturedAt": 1729144800000,
+  "pid": 1234,
+  "parentPid": 1,
+  "parentName": "systemd",
+  "commandLine": "node /srv/app/dist/server.js --port 3000",
+  "workingDirectory": "/srv/app",
+  "filesTouched": [
+    "/srv/app/dist/server.js",
+    "/srv/app/node_modules/.cache/default-development/0.pack"
+  ],
+  "networkDestinations": [],
+  "user": "www-data",
+  "envVarNames": ["NODE_ENV", "PORT", "HOME", "PATH"]
+}

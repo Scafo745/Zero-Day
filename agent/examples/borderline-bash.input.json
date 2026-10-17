@@ -1,0 +1,15 @@
+{
+  "capturedAt": 1729144800000,
+  "pid": 5512,
+  "parentPid": 5500,
+  "parentName": "sshd",
+  "commandLine": "/bin/bash",
+  "workingDirectory": "/home/alice",
+  "filesTouched": [
+    "/home/alice/.bashrc",
+    "/home/alice/.bash_history"
+  ],
+  "networkDestinations": [],
+  "user": "alice",
+  "envVarNames": ["HOME", "USER", "TERM", "SHELL", "SSH_CLIENT", "SSH_TTY"]
+}

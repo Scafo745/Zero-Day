@@ -1,0 +1,16 @@
+{
+  "capturedAt": 1729144800000,
+  "pid": 7823,
+  "parentPid": 7800,
+  "parentName": "bash",
+  "commandLine": "/bin/bash /opt/deploy/scripts/release.sh --env production --tag v1.4.2",
+  "workingDirectory": "/opt/deploy",
+  "filesTouched": [
+    "/opt/deploy/scripts/release.sh",
+    "/opt/deploy/.env.production",
+    "/opt/deploy/dist/app.tar.gz"
+  ],
+  "networkDestinations": ["10.0.1.50:8080"],
+  "user": "deploy-bot",
+  "envVarNames": ["DEPLOY_TOKEN", "CI", "HOME", "PATH", "ENVIRONMENT"]
+}
