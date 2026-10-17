@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { addClient, removeClient } from '../broadcaster';
-import type { ConnectedEvent } from '../../../packages/shared/types';
+import type { ConnectedEvent } from '../types';
 
 export default function streamRoute(req: Request, res: Response): void {
   res.setHeader('Content-Type', 'text/event-stream');

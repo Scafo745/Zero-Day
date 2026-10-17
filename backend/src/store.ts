@@ -1,4 +1,4 @@
-import type { ProcessInfo, ZeroTraceModelResponse } from '../../packages/shared/types';
+import type { ProcessInfo, ZeroTraceModelResponse } from './types';
 
 export type IncidentPosture = 'ANALYZING' | 'CLEAR' | 'BREACH' | 'CONTAINED';
 

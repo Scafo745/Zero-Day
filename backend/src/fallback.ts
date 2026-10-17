@@ -1,4 +1,4 @@
-import type { ZeroTraceModelResponse } from '../../packages/shared/types';
+import type { ZeroTraceModelResponse } from './types';
 
 export function getFallback(scenario: string): ZeroTraceModelResponse {
   switch (scenario) {

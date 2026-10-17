@@ -1,4 +1,4 @@
-import type { ProcessInfo } from '../../packages/shared/types';
+import type { ProcessInfo } from './types';
 
 export function getScenario(name: string): ProcessInfo {
   const capturedAt = Date.now();

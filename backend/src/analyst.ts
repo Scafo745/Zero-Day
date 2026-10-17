@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import type { ProcessInfo, ZeroTraceModelResponse } from '../../packages/shared/types';
+import type { ProcessInfo, ZeroTraceModelResponse } from './types';
 import { config } from './config';
 import { getFallback } from './fallback';
 import { validateModelResponse } from './validator';
@@ -30,8 +30,9 @@ ${JSON.stringify(process, null, 2)}
 
 function resolveAgentFile(relPath: string): string {
   const candidates = [
-    path.resolve(__dirname, '../../agent', relPath),
+    path.resolve(__dirname, '../agent', relPath),
     path.resolve(process.cwd(), 'agent', relPath),
+    path.resolve(__dirname, '../../agent', relPath),
     path.resolve(process.cwd(), '../agent', relPath),
   ];
   for (const candidate of candidates) {

@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { getIncident, upsertIncident } from '../store';
 import { broadcast } from '../broadcaster';
-import type { ContainmentEvent, ContainResponse } from '../../../packages/shared/types';
+import type { ContainmentEvent, ContainResponse } from '../types';
 
 export default function containRoute(req: Request, res: Response): void {
   const { incidentId } = req.body ?? {};

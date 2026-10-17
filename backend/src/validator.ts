@@ -1,4 +1,4 @@
-import type { ZeroTraceModelResponse } from '../../packages/shared/types';
+import type { ZeroTraceModelResponse } from './types';
 
 export class ValidationError extends Error {
   constructor(message: string) {

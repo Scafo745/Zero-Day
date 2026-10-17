@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { config } from '../config';
-import type { HealthResponse } from '../../../packages/shared/types';
+import type { HealthResponse } from '../types';
 
 export default async function healthRoute(req: Request, res: Response): Promise<void> {
   let ollamaReachable = false;

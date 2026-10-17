@@ -4,7 +4,7 @@ import { getScenario } from '../scenarios';
 import { analyzeProcess } from '../analyst';
 import { upsertIncident } from '../store';
 import { broadcast } from '../broadcaster';
-import type { IncidentEvent } from '../../../packages/shared/types';
+import type { IncidentEvent } from '../types';
 
 const ALLOWED_SCENARIOS = ['zero-day', 'benign', 'borderline-deploy', 'borderline-bash'];
 

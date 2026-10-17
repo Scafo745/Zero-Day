@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import type { ZeroTraceIncidentEvent } from '../../packages/shared/types';
+import type { ZeroTraceIncidentEvent } from './types';
 
 const clients = new Set<Response>();
 const keepAliveIntervals = new WeakMap<Response, NodeJS.Timeout>();
