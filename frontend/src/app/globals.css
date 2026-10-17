@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-canvas: #F0F0F0;
+  --stark-black: #121212;
+  --primary-red: #D02020;
+  --primary-blue: #1040C0;
+  --primary-yellow: #F0C020;
+  --muted: #E0E0E0;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--stark-black);
+  font-family: 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Bauhaus Constructivist Pattern */
+.bauhaus-dot-grid {
+  background-image: radial-gradient(#121212 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.bauhaus-dot-grid-white {
+  background-image: radial-gradient(#ffffff 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+/* Tactile Physical Press Button */
+.btn-bauhaus {
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+.btn-bauhaus:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px 0px #121212 !important;
+}
+
+/* Geometric Clip Paths */
+.clip-triangle {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F0F0F0;
+  border-left: 2px solid #121212;
+}
+::-webkit-scrollbar-thumb {
+  background: #121212;
+}
