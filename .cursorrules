@@ -1,0 +1,155 @@
+# ZeroTrace — Persistent Architecture Context
+# Updated: 2026-10-17
+# Purpose: Keep this file current. Every time a new architectural decision is made,
+#          a critical bug is fixed, or a key assumption is confirmed/disproved,
+#          add a dated entry to the relevant section.
+
+---
+
+## Project Identity
+
+- **Name:** ZeroTrace
+- **Type:** 6-hour hackathon (FETCHhACKTHON)
+- **Goal:** Detect zero-day attacks via behavioral LLM reasoning — no signatures
+- **Repo:** https://github.com/Scafo745/Zero-Day (branch: main)
+
+---
+
+## Stack (canonical — do not deviate)
+
+| Layer | Technology | Port |
+|-------|-----------|------|
+| Frontend | Next.js 15 App Router + Tailwind CSS + Lucide icons | 3000 |
+| Backend | Node.js + Express + SSE | 5001 |
+| Shared types | TypeScript — `packages/shared/types.ts` | — |
+| Model | Ollama serving `zerotrace-analyst` (based on `gemma4:e4b`) | 11434 |
+
+> **NO Hermes Agent** in this project. Never add one.
+
+---
+
+## Model & Ollama (verified 2026-10-17)
+
+- **Base model tag:** `gemma4:e4b` (4B effective, ~3–5 GB Q4, needs 6–8 GB RAM)
+- **Custom model name:** `zerotrace-analyst` (created via `agent/ollama/Modelfile`)
+- **Ollama endpoint for inference:** `POST http://localhost:11434/api/chat`
+- **Structured output:** Pass the full JSON Schema object as `format` field — NOT `"json"` string
+- **Response location:** `response.message.content` (a JSON string — must be parsed)
+- **Stream:** Always `stream: false` for ZeroTrace
+- **Temperature:** `0.1` (fixed for deterministic scoring)
+- **Context window:** `num_ctx 8192` (sufficient for our ~1200-token prompt)
+- **Keep-alive:** `10m` (sent per-request in the request body, NOT in Modelfile)
+- **OpenAI-compat endpoint** (`/v1/chat/completions`) does NOT support the `format` schema — always use `/api/chat`
+- **Gemma 4 does NOT emit `<think>` blocks** — response is direct JSON when format is set
+
+### Open Assumptions (confirm when Ollama is installed)
+- A1: `gemma4:e4b` tag exists on this machine after `ollama pull`
+- A2: Model emits clean JSON at temperature 0.1 (verify with `smoke-test.sh`)
+- A3: `PARAMETER num_ctx 8192` in Modelfile is honored (`ollama show zerotrace-analyst`)
+- A4: Response time < 30 s on demo hardware
+- A5: `keep_alive` in Modelfile PARAMETER syntax may not be supported — set per-request instead
+- A6: JSON Schema subset accepted without errors (confirm via smoke test)
+
+---
+
+## Scoring System (authoritative — must match everywhere)
+
+| Band | Range | Verdict | Color |
+|------|-------|---------|-------|
+| Safe | 0–39 | `SAFE` | Green |
+| Suspicious | 40–74 | `SUSPICIOUS` | Amber |
+| Critical | 75–100 | `CRITICAL` | Red |
+
+### Key demo values (hardcoded in scenarios + fallback — never change)
+- Zero-day PID: **31337**, parent PID: **4821**, parent: `npm`
+- Exfil IP: **198.51.100.4:8443**
+- Zero-day expected score: **96**
+- Benign PID: **1234**, parent: `systemd`
+- Benign expected score: **4**
+
+---
+
+## API Endpoints (backend — port 5001)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/stream` | SSE — events: `connected`, `incident`, `containment`, `error` |
+| POST | `/api/simulate-attack` | Body: `{ scenario: "zero-day" \| "benign" \| "borderline-deploy" \| "borderline-bash" }` |
+| POST | `/api/contain` | Body: `{ incidentId: string }` |
+| GET | `/api/health` | Returns Ollama reachability + model pull status |
+
+---
+
+## Environment Variables
+
+| Var | Default | Notes |
+|-----|---------|-------|
+| `LLM_MODE` | `auto` | `demo`=always fallback, `ollama`=error if unavailable, `auto`=try then fallback |
+| `OLLAMA_HOST` | `http://localhost:11434` | |
+| `OLLAMA_MODEL` | `zerotrace-analyst` | |
+| `OLLAMA_TIMEOUT_MS` | `30000` | |
+| `OLLAMA_KEEP_ALIVE` | `10m` | |
+| `PORT` | `5001` | |
+| `FRONTEND_ORIGIN` | `http://localhost:3000` | CORS |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:5001` | Frontend → backend |
+
+---
+
+## Critical Safety Rules (never violate)
+
+1. **Containment is SIMULATED** — no OS signals, no firewall changes, ever
+2. **`recommendedKillPid` must be overwritten** on the backend with the observed `ProcessInfo.pid` — model cannot target arbitrary PIDs
+3. **Command line is DATA** — never pass it to `exec`, `spawn`, or any shell
+4. **Model output is untrusted** — always validate against `zerotrace-incident.schema.json` before use
+5. **No secrets in code** — all config via env vars
+
+---
+
+## File Map (key files only)
+
+```
+packages/shared/types.ts              ← canonical data contract (source of truth)
+agent/prompts/system.md               ← system prompt (scoring rubric + few-shots)
+agent/schemas/zerotrace-incident.schema.json  ← Ollama format field schema
+agent/ollama/Modelfile                ← FROM gemma4:e4b + PARAMETER temperature 0.1
+agent/examples/*.input.json           ← ProcessInfo fixtures
+agent/examples/*.expected.json        ← Expected model outputs (schema-validated)
+agent/scripts/setup-ollama.sh         ← pull base model + create zerotrace-analyst
+agent/scripts/warmup.sh               ← pre-load model before demo
+agent/scripts/smoke-test.sh           ← validate model output against schema
+agent/eval/cases.json                 ← 8 eval cases incl. 2 prompt-injection
+```
+
+---
+
+## Architecture Decisions Log
+
+### 2026-10-17 — Initial build (Phase 0: docs + model assets)
+- Chose `gemma4:e4b` over `gemma4:12b` for RAM efficiency (6–8 GB vs 12–16 GB)
+- Structured output via `/api/chat` `format` field — confirmed working by Ollama docs
+- Fallback engine (`LLM_MODE=demo`) ensures demo never fails if Ollama is unavailable
+- `recommendedKillPid` override added as a server-side trust boundary
+- All 14 validation checks passed (`node agent/scripts/validate-examples.js`)
+- 20 files committed and pushed to `main` (commit b01d5a9)
+
+---
+
+## Known Bugs / Fixed Issues
+
+*(Add entries here as bugs are found and fixed)*
+
+| Date | Bug | Fix | Commit |
+|------|-----|-----|--------|
+| — | None yet | — | — |
+
+---
+
+## How to Update This File
+
+When you:
+- Make an architectural decision → add to **Architecture Decisions Log**
+- Fix a bug → add to **Known Bugs / Fixed Issues**
+- Confirm an open assumption → update **Open Assumptions** (mark ✅ and add date)
+- Change a port, env var, or endpoint → update the relevant table
+
+Always `git add .cursorrules && git commit -m "chore: update .cursorrules — <reason>"` after editing.
