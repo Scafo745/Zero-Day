@@ -33,7 +33,7 @@ export function ContainmentButton({
         className="w-full bg-canvas text-stark-black/50 border-2 border-stark-black/40 py-3.5 px-6 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed"
       >
         <Ban className="w-4 h-4" />
-        <span>CONTAINMENT LOCKED — THREAT SCORE BELOW CRITICAL THRESHOLD (SCORE &lt; 40)</span>
+        <span>CONTAINMENT LOCKED — THREAT SCORE BELOW CRITICAL THRESHOLD (SCORE &lt; 75)</span>
       </button>
     );
   }

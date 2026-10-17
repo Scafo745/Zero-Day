@@ -5,11 +5,13 @@ import { Flame, ShieldCheck, GitBranch, Terminal, Loader2 } from 'lucide-react';
 interface ScenarioControlsProps {
   onSimulate: (scenario: string) => Promise<void>;
   isSimulating: boolean;
+  simulatingScenario?: string | null;
 }
 
 export function ScenarioControls({
   onSimulate,
   isSimulating,
+  simulatingScenario,
 }: ScenarioControlsProps) {
   return (
     <div className="w-full bg-white border-4 border-stark-black shadow-[6px_6px_0px_0px_#121212] p-6 mb-8">
@@ -24,7 +26,11 @@ export function ScenarioControls({
           </p>
         </div>
         <div className="text-xs font-mono font-bold bg-canvas border-2 border-stark-black px-3 py-1">
-          MODE: BEHAVIORAL PROVENANCE
+          {isSimulating ? (
+            <span className="text-bauhaus-red font-black animate-pulse">STATUS: INFERENCE ACTIVE</span>
+          ) : (
+            'MODE: BEHAVIORAL PROVENANCE'
+          )}
         </div>
       </div>
 
@@ -34,27 +40,37 @@ export function ScenarioControls({
           <button
             onClick={() => onSimulate('zero-day')}
             disabled={isSimulating}
-            className="btn-bauhaus flex items-center justify-center gap-3 bg-bauhaus-red hover:bg-bauhaus-red/90 text-white font-black text-base uppercase tracking-wider py-4 px-6 border-4 border-stark-black shadow-[4px_4px_0px_0px_#121212] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-bauhaus flex items-center justify-center gap-3 bg-bauhaus-red hover:bg-bauhaus-red/90 text-white font-black text-base uppercase tracking-wider py-4 px-6 border-4 border-stark-black shadow-[4px_4px_0px_0px_#121212] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isSimulating ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+            {isSimulating && simulatingScenario === 'zero-day' ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>ANALYZING WITH GEMMA 4...</span>
+              </>
             ) : (
-              <Flame className="w-5 h-5 fill-current" />
+              <>
+                <Flame className="w-5 h-5 fill-current" />
+                <span>SIMULATE ZERO-DAY ATTACK</span>
+              </>
             )}
-            <span>SIMULATE ZERO-DAY ATTACK</span>
           </button>
 
           <button
             onClick={() => onSimulate('benign')}
             disabled={isSimulating}
-            className="btn-bauhaus flex items-center justify-center gap-3 bg-bauhaus-blue hover:bg-bauhaus-blue/90 text-white font-black text-base uppercase tracking-wider py-4 px-6 border-4 border-stark-black shadow-[4px_4px_0px_0px_#121212] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-bauhaus flex items-center justify-center gap-3 bg-bauhaus-blue hover:bg-bauhaus-blue/90 text-white font-black text-base uppercase tracking-wider py-4 px-6 border-4 border-stark-black shadow-[4px_4px_0px_0px_#121212] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isSimulating ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+            {isSimulating && simulatingScenario === 'benign' ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>ANALYZING WITH GEMMA 4...</span>
+              </>
             ) : (
-              <ShieldCheck className="w-5 h-5" />
+              <>
+                <ShieldCheck className="w-5 h-5" />
+                <span>SIMULATE BENIGN ACTIVITY</span>
+              </>
             )}
-            <span>SIMULATE BENIGN ACTIVITY</span>
           </button>
         </div>
 
@@ -63,19 +79,37 @@ export function ScenarioControls({
           <button
             onClick={() => onSimulate('borderline-deploy')}
             disabled={isSimulating}
-            className="btn-bauhaus flex items-center justify-center gap-2 bg-bauhaus-yellow hover:bg-bauhaus-yellow/90 text-stark-black font-bold text-sm uppercase tracking-wider py-2.5 px-4 border-2 border-stark-black shadow-[3px_3px_0px_0px_#121212] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-bauhaus flex items-center justify-center gap-2 bg-bauhaus-yellow hover:bg-bauhaus-yellow/90 text-stark-black font-bold text-sm uppercase tracking-wider py-2.5 px-4 border-2 border-stark-black shadow-[3px_3px_0px_0px_#121212] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <GitBranch className="w-4 h-4" />
-            <span>BORDERLINE DEPLOY PIPELINE (~45 SUSPICIOUS)</span>
+            {isSimulating && simulatingScenario === 'borderline-deploy' ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>ANALYZING DEPLOY PIPELINE...</span>
+              </>
+            ) : (
+              <>
+                <GitBranch className="w-4 h-4" />
+                <span>BORDERLINE DEPLOY PIPELINE (~45 SUSPICIOUS)</span>
+              </>
+            )}
           </button>
 
           <button
             onClick={() => onSimulate('borderline-bash')}
             disabled={isSimulating}
-            className="btn-bauhaus flex items-center justify-center gap-2 bg-canvas hover:bg-white text-stark-black font-bold text-sm uppercase tracking-wider py-2.5 px-4 border-2 border-stark-black shadow-[3px_3px_0px_0px_#121212] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-bauhaus flex items-center justify-center gap-2 bg-canvas hover:bg-white text-stark-black font-bold text-sm uppercase tracking-wider py-2.5 px-4 border-2 border-stark-black shadow-[3px_3px_0px_0px_#121212] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <Terminal className="w-4 h-4" />
-            <span>BORDERLINE SSH BASH SESSION (~35 SAFE)</span>
+            {isSimulating && simulatingScenario === 'borderline-bash' ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>ANALYZING SSH SESSION...</span>
+              </>
+            ) : (
+              <>
+                <Terminal className="w-4 h-4" />
+                <span>BORDERLINE SSH BASH SESSION (~35 SAFE)</span>
+              </>
+            )}
           </button>
         </div>
       </div>

@@ -33,3 +33,16 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: zerotrace-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+      - ./agent/ollama/Modelfile:/root/Modelfile:ro
+    restart: unless-stopped
+
+volumes:
+  ollama_models:

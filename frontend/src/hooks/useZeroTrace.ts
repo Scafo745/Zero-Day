@@ -25,9 +25,11 @@ export function useZeroTrace() {
   const [incidents, setIncidents] = useState<StoredIncidentView[]>([]);
   const [activeBreachId, setActiveBreachId] = useState<string | null>(null);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
+  const [simulatingScenario, setSimulatingScenario] = useState<string | null>(null);
   const [isContaining, setIsContaining] = useState<boolean>(false);
 
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const simulationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5001';
 
@@ -50,6 +52,10 @@ export function useZeroTrace() {
         if (data.type === 'connected') {
           setConnectionStatus('connected');
         } else if (data.type === 'incident') {
+          if (simulationTimeoutRef.current) clearTimeout(simulationTimeoutRef.current);
+          setIsSimulating(false);
+          setSimulatingScenario(null);
+
           const posture: PostureType =
             data.result.analysis.threatScore >= 40 ? 'BREACH' : 'CLEAR';
 
@@ -64,7 +70,7 @@ export function useZeroTrace() {
 
           setIncidents((prev) => [newIncident, ...prev]);
 
-          if (posture === 'BREACH') {
+          if (posture === 'BREACH' && data.result.analysis.threatScore >= 75) {
             setActiveBreachId(data.incidentId);
           }
         } else if (data.type === 'containment') {
@@ -78,6 +84,10 @@ export function useZeroTrace() {
           setActiveBreachId((current) =>
             current === data.incidentId ? null : current
           );
+        } else if (data.type === 'error') {
+          if (simulationTimeoutRef.current) clearTimeout(simulationTimeoutRef.current);
+          setIsSimulating(false);
+          setSimulatingScenario(null);
         }
       } catch (err) {
         console.error('[useZeroTrace] SSE JSON parse error:', err);
@@ -102,11 +112,21 @@ export function useZeroTrace() {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
+      if (simulationTimeoutRef.current) {
+        clearTimeout(simulationTimeoutRef.current);
+      }
     };
   }, [connectSSE]);
 
   const simulateAttack = async (scenario: string) => {
     setIsSimulating(true);
+    setSimulatingScenario(scenario);
+    if (simulationTimeoutRef.current) clearTimeout(simulationTimeoutRef.current);
+    simulationTimeoutRef.current = setTimeout(() => {
+      setIsSimulating(false);
+      setSimulatingScenario(null);
+    }, 60000);
+
     try {
       const res = await fetch(`${apiUrl}/api/simulate-attack`, {
         method: 'POST',
@@ -114,11 +134,17 @@ export function useZeroTrace() {
         body: JSON.stringify({ scenario }),
       });
       if (!res.ok) {
+        if (simulationTimeoutRef.current) clearTimeout(simulationTimeoutRef.current);
+        setIsSimulating(false);
+        setSimulatingScenario(null);
         const err = await res.json();
         throw new Error(err.message || 'Simulation failed');
       }
-    } finally {
+    } catch (err) {
+      if (simulationTimeoutRef.current) clearTimeout(simulationTimeoutRef.current);
       setIsSimulating(false);
+      setSimulatingScenario(null);
+      throw err;
     }
   };
 
@@ -144,6 +170,7 @@ export function useZeroTrace() {
     incidents,
     activeBreachId,
     isSimulating,
+    simulatingScenario,
     isContaining,
     simulateAttack,
     contain,

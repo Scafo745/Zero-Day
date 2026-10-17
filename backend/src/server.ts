@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { type Request, type Response, type NextFunction } from 'express';
 import cors from 'cors';
 import { config } from './config';
@@ -47,7 +48,7 @@ if (process.env.NODE_ENV !== 'test') {
             keep_alive: config.ollamaKeepAlive,
             options: { temperature: 0.1, num_predict: 1 },
           }),
-          signal: AbortSignal.timeout(60_000),
+          signal: AbortSignal.timeout(180_000),
         });
         console.log('[server] Warm-up complete — model is resident in memory');
       } catch (err) {

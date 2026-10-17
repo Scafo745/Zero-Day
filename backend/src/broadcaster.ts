@@ -30,6 +30,9 @@ export function broadcast(event: ZeroTraceIncidentEvent): void {
   for (const client of clients) {
     try {
       client.write(data);
+      if (typeof (client as any).flush === 'function') {
+        (client as any).flush();
+      }
     } catch {
       removeClient(client);
     }

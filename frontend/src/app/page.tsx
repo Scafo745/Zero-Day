@@ -14,6 +14,7 @@ export default function DashboardPage() {
     incidents,
     activeBreachId,
     isSimulating,
+    simulatingScenario,
     isContaining,
     simulateAttack,
     contain,
@@ -90,12 +91,15 @@ export default function DashboardPage() {
             <ScenarioControls
               onSimulate={simulateAttack}
               isSimulating={isSimulating}
+              simulatingScenario={simulatingScenario}
             />
 
             <IncidentFeed
               incidents={incidents}
               onContain={contain}
               isContaining={isContaining}
+              isSimulating={isSimulating}
+              simulatingScenario={simulatingScenario}
             />
           </div>
 
