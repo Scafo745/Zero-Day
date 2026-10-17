@@ -6,6 +6,7 @@
 *Powered by Local Air-Gapped Gemma 4, Server-Sent Events (SSE), and a Bauhaus Constructivist SOC Dashboard.*
 
 [![Author](https://img.shields.io/badge/Author-Scafo745-0055ff?style=for-the-badge&logo=github)](https://github.com/Scafo745)
+[![Author & Contributor](https://img.shields.io/badge/Author%20%26%20Contributor-neet2516-10b981?style=for-the-badge&logo=github)](https://github.com/neet2516)
 [![Repository](https://img.shields.io/badge/Repo-Scafo745%2FZero--Day-ff3333?style=for-the-badge&logo=git)](https://github.com/Scafo745/Zero-Day)
 [![Next.js](https://img.shields.io/badge/Frontend-Next.js%2015-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Ollama](https://img.shields.io/badge/AI%20Engine-Ollama%20%7C%20Gemma%204-black?style=for-the-badge&logo=ollama)](https://ollama.com/)
@@ -247,11 +248,14 @@ Executes simulated process termination and egress network blocking for a flagged
 
 ---
 
-## 👤 Author & Maintainer
+## 👥 Authors & Contributors
 
-**Scafo745**  
-- **GitHub**: [@Scafo745](https://github.com/Scafo745)  
-- **Repository**: [https://github.com/Scafo745/Zero-Day](https://github.com/Scafo745/Zero-Day)
+- **Scafo745** (Author & Lead Maintainer)  
+  - **GitHub**: [@Scafo745](https://github.com/Scafo745)  
+  - **Repository**: [https://github.com/Scafo745/Zero-Day](https://github.com/Scafo745/Zero-Day)
+
+- **neet2516** (Author & Contributor)  
+  - **GitHub**: [@neet2516](https://github.com/neet2516)
 
 ---
 
